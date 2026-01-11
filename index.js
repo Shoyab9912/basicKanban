@@ -1,4 +1,4 @@
- let tasksData = {}
+let tasksData = {}
 
 const todo = document.getElementById('todo');
 const progress = document.getElementById('progress');
@@ -32,7 +32,7 @@ function addTask(title, desc, col) {
 
 
 function updateCounts() {
-  columns.forEach(col => {
+    columns.forEach(col => {
         const count = col.querySelectorAll('.task');
         const countEl = col.querySelector('.right');
         tasksData[col.id] = Array.from(count).map(t => {
@@ -40,8 +40,8 @@ function updateCounts() {
                 title: t.querySelector('h3').innerText,
                 desc: t.querySelector('p').innerText,
             }
-         })
-     localStorage.setItem('tasks', JSON.stringify(tasksData));
+        })
+        localStorage.setItem('tasks', JSON.stringify(tasksData));
         countEl.textContent = count.length;
     })
 }
@@ -56,27 +56,25 @@ tasks.forEach(task => {
 
 
 
-if(localStorage.getItem('tasks')) {
+if (localStorage.getItem('tasks')) {
     let data = JSON.parse(localStorage.getItem('tasks'));
     tasksData = data;
-    for(let col in data) {
-      const column = document.getElementById(col);
-       data[col].forEach(task => {
-              addTask(task.title, task.desc, column);
+    for (let col in data) {
+        const column = document.getElementById(col);
+        data[col].forEach(task => {
+            addTask(task.title, task.desc, column);
 
-       })
+        })
 
-       const allTasks = column.querySelectorAll('.task');
-       const countEl = column.querySelector('.right');
-       countEl.textContent = allTasks.length;
+        const allTasks = column.querySelectorAll('.task');
+        const countEl = column.querySelector('.right');
+        countEl.textContent = allTasks.length;
 
     }
-    // const allTasks = document.querySelectorAll('.task');
-    // on
-    // count.textContent = allTasks.length;
+
 }
 
-    
+
 
 
 function allowDrag(col) {
