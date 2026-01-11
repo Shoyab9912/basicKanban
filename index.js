@@ -9,9 +9,26 @@ const tasks = document.querySelectorAll('.task');
 
 let draggedTask = null;
 
+function addTask(title, desc, col) {
+    const newTask = document.createElement("div");
+    newTask.classList.add("task");
+    newTask.setAttribute("draggable", "true");
+    newTask.innerHTML = `
+        <h3>${title}</h3>
+        <p>${desc}</p>
+        <button>Delete</button>
+    `;
+    col.appendChild(newTask);
+    newTask.addEventListener("drag", () => {
+        draggedTask = newTask;
+    });
 
-
-
+    const deleteBtn = newTask.querySelector("button");
+    deleteBtn.addEventListener("click", () => {
+        newTask.remove();
+        updateCounts();
+    });
+}
 
 
 function updateCounts() {
@@ -45,22 +62,18 @@ if(localStorage.getItem('tasks')) {
     for(let col in data) {
       const column = document.getElementById(col);
        data[col].forEach(task => {
-        const taskEl = document.createElement("div");
-        taskEl.classList.add("task");
-        taskEl.setAttribute("draggable", "true");
-        taskEl.innerHTML = `
-            <h3>${task.title}</h3>
-            <p>${task.desc}</p>
-            <button>Delete</button>
-        `;
-        column.appendChild(taskEl);
-          taskEl.addEventListener("drag", () => {
-            draggedTask = taskEl;
-    });
+              addTask(task.title, task.desc, column);
 
        })
 
+       const allTasks = column.querySelectorAll('.task');
+       const countEl = column.querySelector('.right');
+       countEl.textContent = allTasks.length;
+
     }
+    // const allTasks = document.querySelectorAll('.task');
+    // on
+    // count.textContent = allTasks.length;
 }
 
     
@@ -119,22 +132,11 @@ taskBtn.addEventListener("click", () => {
     //     return;
     // }
 
-    const newTask = document.createElement("div");
-    newTask.classList.add("task");
-    newTask.setAttribute("draggable", "true");
-    newTask.innerHTML = `
-        <h3>${taskTitle.value}</h3>
-        <p>${taskDesc.value}</p>
-        <button>Delete</button>
-    `;
-    todo.appendChild(newTask);
+    addTask(taskTitle.value, taskDesc.value, todo);
     taskTitle.value = "";
     taskDesc.value = " ";
     updateCounts();
-    // Add drag event listeners to the new task
-    newTask.addEventListener("drag", () => {
-        draggedTask = newTask;
-    });
+    // Add drag event listeners to the new tas
     modal.classList.remove("active");
 
 })

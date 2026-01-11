@@ -50,6 +50,9 @@ main {
 }
 
 nav {
+    position: sticky;
+    top: 0;
+    background-color: var(--btn-color);
     padding: var(--nav-padding);
     display: flex;
     justify-content: space-between;
@@ -76,6 +79,7 @@ section {
 
  section .task-col {
     flex-grow: 1;
+    width:100%;
     background-color: var(--btn-color);
     padding: var(--padding-lg);
     border-radius: var(--border-radius-md);
@@ -173,7 +177,7 @@ section .task-col .task button {
 .modal .center button {
     border: none;
     outline: none;
-    background-color: var(--btn-color);
+    background-color: var(--bg-color);
     width:fit-content;
     align-self:center;
     padding: var(--padding-md) var(--padding-lg);
