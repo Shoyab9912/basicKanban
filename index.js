@@ -1,22 +1,58 @@
 let tasksData = {}
-
+let editing = null;
 const todo = document.getElementById('todo');
 const progress = document.getElementById('progress');
 const done = document.getElementById('done');
 const columns = [todo, progress, done];
 
+
 const tasks = document.querySelectorAll('.task');
 
 let draggedTask = null;
+let timerMap = new Map()
+
+
+
+document.getElementById("undoBtn").addEventListener("click", () => {
+    let id = undoBtn.dataset.id;
+    console.log(id)
+    let timerId = timerMap.get(id);
+    clearTimeout(timerId)
+    let task = document.querySelector(`[data-id="${id}"]`);
+    task.style.display = 'block';
+    timerMap.delete(id)
+    document.querySelector("#toast").style.display = "none"
+    document.querySelectorAll('.task button').forEach(btn => { btn.disabled = false; });
+
+})
+
+
+
+function disableButtons(tasks, val = true) {
+    tasks.forEach(btn => btn.disabled = val)
+}
+
 
 function addTask(title, desc, col) {
+
+    if (editing) {
+        editing.querySelector('h3').innerText = title;
+        editing.querySelector('p').innerText = desc;
+        editing = null;
+        return;
+    }
     const newTask = document.createElement("div");
     newTask.classList.add("task");
+    newTask.dataset.id = crypto.randomUUID();
     newTask.setAttribute("draggable", "true");
     newTask.innerHTML = `
         <h3>${title}</h3>
         <p>${desc}</p>
-        <button>Delete</button>
+        <div class="bottom-row">
+        <button data-id=${newTask.getAttribute("data-id")}>Delete</button>
+        <button class="edit">Edit</button>
+        </div>
+
     `;
     col.appendChild(newTask);
     newTask.addEventListener("drag", () => {
@@ -25,10 +61,42 @@ function addTask(title, desc, col) {
 
     const deleteBtn = newTask.querySelector("button");
     deleteBtn.addEventListener("click", () => {
-        newTask.remove();
-        updateCounts();
+        const tasks = document.querySelectorAll('.task button')
+        disableButtons(tasks)
+        deleteBtn.disabled = false;
+        let del = deleteBtn.parentElement.parentElement;
+        del.style.display = 'none';
+        let toast = document.getElementById('toast')
+        toast.style.display = 'block';
+        toast.querySelector("#undoBtn").dataset.id = deleteBtn.dataset.id;
+        let timerId = setTimeout(() => {
+            newTask.remove();
+            updateCounts();
+            timerMap.delete(deleteBtn.getAttribute('data-id'))
+            toast.style.display = 'none';
+            disableButtons(tasks, false)
+        }, 3000)
+        timerMap.set(deleteBtn.getAttribute('data-id'), timerId)
+
     });
+
+
+
+
+
+    const editBtn = newTask.querySelector(".edit");
+    editBtn.addEventListener("click", (e) => {
+        const modal = document.querySelector(".modal");
+        const taskTitle = document.getElementById("task-title");
+        const taskDesc = document.getElementById("task-desc");
+        //  const addTaskBtn = document.getElementById("addTask")  ;
+        taskTitle.value = newTask.querySelector('h3').innerText;
+        taskDesc.value = newTask.querySelector('p').innerText;
+        modal.classList.add("active");
+        editing = newTask;
+    })
 }
+
 
 
 function updateCounts() {

@@ -179,9 +179,41 @@ section .task-col .task button {
     outline: none;
     background-color: var(--bg-color);
     width:fit-content;
-    align-self:center;
+    align-self: center;
     padding: var(--padding-md) var(--padding-lg);
     border-radius: var(--border-radius-sm);
     cursor: pointer;
 
+}
+
+.bottom-row {
+    display: flex;
+    gap: var(--padding-md);
+    margin-top: var(--padding-md);
+    justify-content: space-between;
+}
+
+button.edit {
+     border: none;
+    outline: none;
+    background-color: var(--bg-color);
+    width:fit-content;
+    padding: var(--padding-md) var(--padding-lg);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+
+}
+
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display:none;
+   /* hidden by default */
 }
